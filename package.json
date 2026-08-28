@@ -1,0 +1,15 @@
+{
+  "name": "desktop-wallpaper-dashboard",
+  "version": "0.1.0",
+  "description": "A local-first Windows desktop wallpaper dashboard with editable notes and tasks.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "keywords": ["electron", "desktop", "dashboard", "sticky-notes", "windows"],
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^37.0.0"
+  }
+}
