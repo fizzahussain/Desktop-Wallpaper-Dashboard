@@ -1,12 +1,26 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, screen } = require('electron');
 const path = require('path');
 
 function createWindow() {
+  const display = screen.getPrimaryDisplay();
+  const { width, height } = display.bounds;
+
   const win = new BrowserWindow({
-    width: 1440,
-    height: 900,
+    x: 0,
+    y: 0,
+    width,
+    height,
     frame: false,
-    resizable: true,
+    transparent: false,
+    resizable: false,
+    movable: false,
+    minimizable: false,
+    maximizable: false,
+    closable: true,
+    skipTaskbar: true,
+    alwaysOnBottom: true,
+    fullscreen: true,
+    autoHideMenuBar: true,
     backgroundColor: '#0b0d10',
     webPreferences: {
       contextIsolation: true,
@@ -14,10 +28,15 @@ function createWindow() {
     }
   });
 
+  win.setAlwaysOnBottom(true);
   win.loadFile(path.join(__dirname, 'index.html'));
 }
 
 app.whenReady().then(() => {
+  if (process.platform === 'win32') {
+    app.setLoginItemSettings({ openAtLogin: true, path: process.execPath });
+  }
+
   createWindow();
 
   app.on('activate', () => {
