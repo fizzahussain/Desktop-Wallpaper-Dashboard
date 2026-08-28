@@ -1,15 +1,42 @@
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent = now.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-  document.getElementById('date').textContent = now.toLocaleDateString([], {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric'
+  document.getElementById('clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('date').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function renderNotes() {
+  const container = document.getElementById('notes-list');
+  const notes = window.dashboardNotes.loadNotes();
+  container.innerHTML = '';
+  if (!notes.length) {
+    container.innerHTML = '<div class="empty-state">Write down anything you don\'t want to forget.</div>';
+    return;
+  }
+  notes.forEach((note) => {
+    const card = document.createElement('div');
+    card.className = 'note-card';
+    card.innerHTML = `<input class="note-title" aria-label="Note title" /><textarea class="note-body" aria-label="Note body" placeholder="Write something..."></textarea><button class="note-delete" aria-label="Delete note">×</button>`;
+    const title = card.querySelector('.note-title');
+    const body = card.querySelector('.note-body');
+    title.value = note.title;
+    body.value = note.body;
+    const persist = () => {
+      const updated = window.dashboardNotes.loadNotes().map((item) => item.id === note.id ? { ...item, title: title.value, body: body.value } : item);
+      window.dashboardNotes.saveNotes(updated);
+    };
+    title.addEventListener('input', persist);
+    body.addEventListener('input', persist);
+    card.querySelector('.note-delete').addEventListener('click', () => { window.dashboardNotes.deleteNote(note.id); renderNotes(); });
+    container.appendChild(card);
   });
 }
 
+document.getElementById('add-note').addEventListener('click', () => {
+  window.dashboardNotes.createNote();
+  renderNotes();
+  document.querySelector('.note-title:last-of-type')?.focus();
+});
+
 updateClock();
 setInterval(updateClock, 1000);
+renderNotes();

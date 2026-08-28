@@ -9,43 +9,15 @@
 <body>
   <main class="dashboard">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">DESKTOP WORKSPACE</p>
-        <h1 id="date">Saturday, August 29</h1>
-      </div>
+      <div><p class="eyebrow">DESKTOP WORKSPACE</p><h1 id="date">Saturday, August 29</h1></div>
       <div class="clock" id="clock">00:00</div>
     </header>
-
-    <section class="hero">
-      <p class="eyebrow">GOOD TO HAVE YOU BACK</p>
-      <h2>Keep the important things<br /><span>in sight.</span></h2>
-    </section>
-
+    <section class="hero"><p class="eyebrow">GOOD TO HAVE YOU BACK</p><h2>Keep the important things<br /><span>in sight.</span></h2></section>
     <section class="grid">
-      <article class="panel tasks">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">TODAY</p>
-            <h3>Tasks</h3>
-          </div>
-          <button class="icon-button" aria-label="Add task">+</button>
-        </div>
-        <div id="tasks-list" class="empty-state">Your tasks will appear here.</div>
-      </article>
-
-      <article class="panel notes">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">QUICK CAPTURE</p>
-            <h3>Sticky Notes</h3>
-          </div>
-          <button class="icon-button" aria-label="Add note">+</button>
-        </div>
-        <div class="note-placeholder">Write down anything you don't want to forget.</div>
-      </article>
+      <article class="panel tasks"><div class="panel-heading"><div><p class="eyebrow">TODAY</p><h3>Tasks</h3></div><button class="icon-button" aria-label="Add task">+</button></div><div id="tasks-list" class="empty-state">Your tasks will appear here.</div></article>
+      <article class="panel notes"><div class="panel-heading"><div><p class="eyebrow">QUICK CAPTURE</p><h3>Sticky Notes</h3></div><button class="icon-button" id="add-note" aria-label="Add note">+</button></div><div id="notes-list" class="notes-list"></div></article>
     </section>
   </main>
-
-  <script src="./renderer.js"></script>
+  <script src="./notes.js"></script><script src="./renderer.js"></script>
 </body>
 </html>
