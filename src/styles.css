@@ -1,0 +1,55 @@
+* { box-sizing: border-box; }
+
+:root {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #f4f4f5;
+  background: #0b0d10;
+}
+
+html, body { margin: 0; min-height: 100%; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 75% 15%, rgba(90, 99, 115, .16), transparent 34%),
+    radial-gradient(circle at 15% 85%, rgba(55, 65, 81, .14), transparent 32%),
+    #0b0d10;
+}
+
+.dashboard {
+  min-height: 100vh;
+  padding: 48px 7vw 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.025), transparent 45%);
+}
+
+.topbar, .hero, .grid { position: relative; z-index: 1; }
+.topbar { display: flex; justify-content: space-between; align-items: flex-start; }
+.eyebrow { margin: 0 0 10px; font-size: 11px; letter-spacing: .18em; color: #858b96; font-weight: 600; }
+.topbar h1 { margin: 0; font-size: clamp(20px, 2vw, 28px); font-weight: 500; letter-spacing: -.02em; }
+.clock { font-size: clamp(28px, 3vw, 42px); font-weight: 300; letter-spacing: -.04em; color: #dfe2e7; }
+
+.hero { padding: 17vh 0 11vh; }
+.hero h2 { margin: 0; font-size: clamp(44px, 6vw, 86px); line-height: .98; font-weight: 300; letter-spacing: -.055em; }
+.hero h2 span { color: #8e949e; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 1050px; }
+.panel { min-height: 260px; padding: 26px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: rgba(20, 23, 28, .68); backdrop-filter: blur(18px); box-shadow: 0 24px 80px rgba(0,0,0,.22); }
+.panel-heading { display: flex; align-items: flex-start; justify-content: space-between; }
+.panel h3 { margin: 0; font-size: 24px; font-weight: 450; }
+.icon-button { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; background: rgba(255,255,255,.04); color: #e8eaed; font-size: 22px; line-height: 1; cursor: pointer; }
+.icon-button:hover { background: rgba(255,255,255,.09); }
+.empty-state, .note-placeholder { margin-top: 72px; color: #777e89; font-size: 14px; }
+
+@media (max-width: 760px) {
+  .dashboard { padding: 30px 24px 48px; }
+  .hero { padding: 12vh 0 9vh; }
+  .grid { grid-template-columns: 1fr; }
+}
