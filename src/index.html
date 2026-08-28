@@ -7,10 +7,14 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <input id="wallpaper-picker" type="file" accept="image/*" hidden />
   <main class="dashboard">
     <header class="topbar">
       <div><p class="eyebrow">DESKTOP WORKSPACE</p><h1 id="date">Saturday, August 29</h1></div>
-      <div class="clock" id="clock">00:00</div>
+      <div class="header-actions">
+        <button class="wallpaper-button" id="wallpaper-button" title="Choose wallpaper">Wallpaper</button>
+        <div class="clock" id="clock">00:00</div>
+      </div>
     </header>
     <section class="hero"><p class="eyebrow">GOOD TO HAVE YOU BACK</p><h2>Keep the important things<br /><span>in sight.</span></h2></section>
     <section class="grid">
@@ -24,6 +28,7 @@
       </article>
     </section>
   </main>
+  <script src="./settings.js"></script>
   <script src="./notes.js"></script>
   <script src="./tasks.js"></script>
   <script src="./renderer.js"></script>
