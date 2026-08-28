@@ -12,26 +12,16 @@ function renderTasks() {
     container.innerHTML = '<div class="empty-state">Add your first task for today.</div>';
     return;
   }
-
   tasks.forEach((task) => {
     const row = document.createElement('div');
     row.className = `task-row${task.completed ? ' completed' : ''}`;
-    row.innerHTML = `
-      <button class="task-check" aria-label="Toggle task">${task.completed ? '✓' : ''}</button>
-      <input class="task-text" aria-label="Task" />
-      <button class="task-delete" aria-label="Delete task">×</button>
-    `;
+    row.innerHTML = '<button class="task-check" aria-label="Toggle task"></button><input class="task-text" aria-label="Task" /><button class="task-delete" aria-label="Delete task">×</button>';
     const text = row.querySelector('.task-text');
     text.value = task.text;
+    row.querySelector('.task-check').textContent = task.completed ? '✓' : '';
     text.addEventListener('input', () => window.dashboardTasks.updateTask(task.id, { text: text.value }));
-    row.querySelector('.task-check').addEventListener('click', () => {
-      window.dashboardTasks.updateTask(task.id, { completed: !task.completed });
-      renderTasks();
-    });
-    row.querySelector('.task-delete').addEventListener('click', () => {
-      window.dashboardTasks.deleteTask(task.id);
-      renderTasks();
-    });
+    row.querySelector('.task-check').addEventListener('click', () => { window.dashboardTasks.updateTask(task.id, { completed: !task.completed }); renderTasks(); });
+    row.querySelector('.task-delete').addEventListener('click', () => { window.dashboardTasks.deleteTask(task.id); renderTasks(); });
     container.appendChild(row);
   });
 }
@@ -44,36 +34,67 @@ function renderNotes() {
     container.innerHTML = '<div class="empty-state">Write down anything you don\'t want to forget.</div>';
     return;
   }
-  notes.forEach((note) => {
+  notes.forEach((note, index) => {
     const card = document.createElement('div');
     card.className = 'note-card';
-    card.innerHTML = `<input class="note-title" aria-label="Note title" /><textarea class="note-body" aria-label="Note body" placeholder="Write something..."></textarea><button class="note-delete" aria-label="Delete note">×</button>`;
+    card.innerHTML = '<div class="note-grip" title="Drag note">⋮⋮</div><input class="note-title" aria-label="Note title" /><textarea class="note-body" aria-label="Note body" placeholder="Write something..."></textarea><button class="note-delete" aria-label="Delete note">×</button>';
     const title = card.querySelector('.note-title');
     const body = card.querySelector('.note-body');
     title.value = note.title;
     body.value = note.body;
-    const persist = () => {
-      const updated = window.dashboardNotes.loadNotes().map((item) => item.id === note.id ? { ...item, title: title.value, body: body.value } : item);
-      window.dashboardNotes.saveNotes(updated);
-    };
+    const persist = () => window.dashboardNotes.updateNote(note.id, { title: title.value, body: body.value });
     title.addEventListener('input', persist);
     body.addEventListener('input', persist);
     card.querySelector('.note-delete').addEventListener('click', () => { window.dashboardNotes.deleteNote(note.id); renderNotes(); });
+    const storedX = Number(note.x) || 0;
+    const storedY = Number(note.y) || 0;
+    card.style.setProperty('--note-x', `${storedX}px`);
+    card.style.setProperty('--note-y', `${storedY}px`);
+    makeDraggable(card, note.id, index);
     container.appendChild(card);
   });
 }
 
-document.querySelector('.tasks .icon-button').addEventListener('click', () => {
-  window.dashboardTasks.addTask();
-  renderTasks();
-  document.querySelector('.task-text:last-of-type')?.focus();
-});
+function makeDraggable(element, id, index) {
+  const grip = element.querySelector('.note-grip');
+  let dragging = false;
+  let startX = 0;
+  let startY = 0;
+  let originX = Number.parseFloat(element.style.getPropertyValue('--note-x')) || 0;
+  let originY = Number.parseFloat(element.style.getPropertyValue('--note-y')) || 0;
 
-document.getElementById('add-note').addEventListener('click', () => {
-  window.dashboardNotes.createNote();
-  renderNotes();
-  document.querySelector('.note-title:last-of-type')?.focus();
-});
+  grip.addEventListener('pointerdown', (event) => {
+    dragging = true;
+    startX = event.clientX;
+    startY = event.clientY;
+    originX = Number.parseFloat(element.style.getPropertyValue('--note-x')) || 0;
+    originY = Number.parseFloat(element.style.getPropertyValue('--note-y')) || 0;
+    grip.setPointerCapture(event.pointerId);
+    element.classList.add('dragging');
+  });
+
+  grip.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    const x = originX + event.clientX - startX;
+    const y = originY + event.clientY - startY;
+    element.style.setProperty('--note-x', `${x}px`);
+    element.style.setProperty('--note-y', `${y}px`);
+  });
+
+  grip.addEventListener('pointerup', (event) => {
+    if (!dragging) return;
+    dragging = false;
+    element.classList.remove('dragging');
+    grip.releasePointerCapture(event.pointerId);
+    window.dashboardNotes.updateNote(id, {
+      x: Number.parseFloat(element.style.getPropertyValue('--note-x')) || 0,
+      y: Number.parseFloat(element.style.getPropertyValue('--note-y')) || 0
+    });
+  });
+}
+
+document.getElementById('add-task').addEventListener('click', () => { window.dashboardTasks.addTask(); renderTasks(); });
+document.getElementById('add-note').addEventListener('click', () => { window.dashboardNotes.createNote(); renderNotes(); });
 
 updateClock();
 setInterval(updateClock, 1000);
