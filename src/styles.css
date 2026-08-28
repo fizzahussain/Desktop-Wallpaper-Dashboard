@@ -26,7 +26,10 @@ body { min-height: 100vh; background: radial-gradient(circle at 75% 15%, rgba(90
 .task-delete, .note-delete { border: 0; background: transparent; color: #676d77; cursor: pointer; font-size: 18px; opacity: .65; }
 .task-delete:hover, .note-delete:hover { opacity: 1; }
 .notes-list { margin-top: 18px; display: grid; gap: 12px; max-height: 280px; overflow: auto; }
-.note-card { position: relative; padding: 14px; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; background: rgba(255,255,255,.025); }
+.note-card { position: relative; padding: 14px 14px 14px 40px; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; background: rgba(255,255,255,.025); transform: translate(var(--note-x, 0), var(--note-y, 0)); transition: box-shadow .15s ease, border-color .15s ease; }
+.note-card.dragging { z-index: 20; border-color: rgba(255,255,255,.18); box-shadow: 0 18px 50px rgba(0,0,0,.4); transition: none; }
+.note-grip { position: absolute; left: 12px; top: 14px; color: #676d77; cursor: grab; user-select: none; letter-spacing: -3px; line-height: 1; }
+.note-grip:active { cursor: grabbing; }
 .note-title, .note-body { display: block; width: 100%; border: 0; outline: 0; background: transparent; color: #e6e8eb; font: inherit; resize: vertical; }
 .note-title { padding-right: 24px; font-weight: 600; }
 .note-body { min-height: 58px; margin-top: 8px; color: #9da3ad; font-size: 13px; }

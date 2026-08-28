@@ -14,13 +14,17 @@ function saveNotes(notes) {
 
 function createNote(title = 'New note', body = '') {
   const notes = loadNotes();
-  notes.push({ id: crypto.randomUUID(), title, body, createdAt: Date.now() });
+  notes.push({ id: crypto.randomUUID(), title, body, x: 0, y: 0, createdAt: Date.now() });
   saveNotes(notes);
   return notes;
+}
+
+function updateNote(id, changes) {
+  saveNotes(loadNotes().map((note) => note.id === id ? { ...note, ...changes } : note));
 }
 
 function deleteNote(id) {
   saveNotes(loadNotes().filter((note) => note.id !== id));
 }
 
-window.dashboardNotes = { loadNotes, saveNotes, createNote, deleteNote };
+window.dashboardNotes = { loadNotes, saveNotes, createNote, updateNote, deleteNote };
