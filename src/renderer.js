@@ -4,6 +4,38 @@ function updateClock() {
   document.getElementById('date').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
 }
 
+function renderTasks() {
+  const container = document.getElementById('tasks-list');
+  const tasks = window.dashboardTasks.loadTasks();
+  container.innerHTML = '';
+  if (!tasks.length) {
+    container.innerHTML = '<div class="empty-state">Add your first task for today.</div>';
+    return;
+  }
+
+  tasks.forEach((task) => {
+    const row = document.createElement('div');
+    row.className = `task-row${task.completed ? ' completed' : ''}`;
+    row.innerHTML = `
+      <button class="task-check" aria-label="Toggle task">${task.completed ? '✓' : ''}</button>
+      <input class="task-text" aria-label="Task" />
+      <button class="task-delete" aria-label="Delete task">×</button>
+    `;
+    const text = row.querySelector('.task-text');
+    text.value = task.text;
+    text.addEventListener('input', () => window.dashboardTasks.updateTask(task.id, { text: text.value }));
+    row.querySelector('.task-check').addEventListener('click', () => {
+      window.dashboardTasks.updateTask(task.id, { completed: !task.completed });
+      renderTasks();
+    });
+    row.querySelector('.task-delete').addEventListener('click', () => {
+      window.dashboardTasks.deleteTask(task.id);
+      renderTasks();
+    });
+    container.appendChild(row);
+  });
+}
+
 function renderNotes() {
   const container = document.getElementById('notes-list');
   const notes = window.dashboardNotes.loadNotes();
@@ -31,6 +63,12 @@ function renderNotes() {
   });
 }
 
+document.querySelector('.tasks .icon-button').addEventListener('click', () => {
+  window.dashboardTasks.addTask();
+  renderTasks();
+  document.querySelector('.task-text:last-of-type')?.focus();
+});
+
 document.getElementById('add-note').addEventListener('click', () => {
   window.dashboardNotes.createNote();
   renderNotes();
@@ -39,4 +77,5 @@ document.getElementById('add-note').addEventListener('click', () => {
 
 updateClock();
 setInterval(updateClock, 1000);
+renderTasks();
 renderNotes();
