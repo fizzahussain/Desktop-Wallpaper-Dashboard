@@ -1,4 +1,4 @@
-const { app, BrowserWindow, screen } = require('electron');
+const { app, BrowserWindow, screen, globalShortcut } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -11,12 +11,10 @@ function createWindow() {
     width,
     height,
     frame: false,
-    transparent: false,
     resizable: false,
     movable: false,
     minimizable: false,
     maximizable: false,
-    closable: true,
     skipTaskbar: true,
     alwaysOnBottom: true,
     fullscreen: true,
@@ -28,21 +26,23 @@ function createWindow() {
     }
   });
 
-  win.setAlwaysOnBottom(true);
+  win.setAlwaysOnBottom(true, 'screen-saver');
   win.loadFile(path.join(__dirname, 'index.html'));
+
+  globalShortcut.register('CommandOrControl+Shift+Q', () => app.quit());
 }
 
 app.whenReady().then(() => {
   if (process.platform === 'win32') {
-    app.setLoginItemSettings({ openAtLogin: true, path: process.execPath });
+    const loginSettings = { openAtLogin: true };
+    if (!app.isPackaged) loginSettings.args = [app.getAppPath()];
+    app.setLoginItemSettings(loginSettings);
   }
 
   createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
 });
+
+app.on('will-quit', () => globalShortcut.unregisterAll());
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
