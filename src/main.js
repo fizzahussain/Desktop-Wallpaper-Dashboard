@@ -22,7 +22,6 @@ function createDesktopWindow(display) {
     minimizable: false,
     maximizable: false,
     skipTaskbar: true,
-    alwaysOnBottom: true,
     fullscreen: false,
     autoHideMenuBar: true,
     backgroundColor: '#0b0d10',
@@ -32,7 +31,7 @@ function createDesktopWindow(display) {
     }
   });
 
-  win.setAlwaysOnBottom(true, 'screen-saver');
+  // Electron 44 removed the old setAlwaysOnBottom API.
   win.setIgnoreMouseEvents(false);
   win.loadFile(path.join(__dirname, 'index.html'));
 
