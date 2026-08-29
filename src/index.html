@@ -10,23 +10,43 @@
   <input id="wallpaper-picker" type="file" accept="image/*" hidden />
   <main class="dashboard">
     <header class="topbar">
-      <div><p class="eyebrow">DESKTOP WORKSPACE</p><h1 id="date">Saturday, August 29</h1></div>
+      <div class="brand-block">
+        <p class="eyebrow">DESKTOP WORKSPACE</p>
+        <h1 id="date">Saturday, August 29</h1>
+      </div>
       <div class="header-actions">
-        <button class="wallpaper-button" id="wallpaper-button" title="Choose wallpaper">Wallpaper</button>
+        <button class="wallpaper-button" id="wallpaper-button" title="Choose wallpaper">Change wallpaper</button>
         <div class="clock" id="clock">00:00</div>
       </div>
     </header>
-    <section class="hero"><p class="eyebrow">GOOD TO HAVE YOU BACK</p><h2>Keep the important things<br /><span>in sight.</span></h2></section>
+
+    <section class="hero">
+      <p class="eyebrow">GOOD TO HAVE YOU BACK</p>
+      <h2>Keep the important things<br /><span>in sight.</span></h2>
+      <p class="hero-hint">A quiet space for the things you don't want to forget.</p>
+    </section>
+
     <section class="grid">
       <article class="panel tasks">
-        <div class="panel-heading"><div><p class="eyebrow">TODAY</p><h3>Tasks</h3></div><button class="icon-button" id="add-task" aria-label="Add task">+</button></div>
+        <div class="panel-heading">
+          <div><p class="eyebrow">TODAY</p><h3>Tasks</h3></div>
+          <button class="icon-button" id="add-task" aria-label="Add task">+</button>
+        </div>
         <div id="tasks-list"></div>
       </article>
       <article class="panel notes">
-        <div class="panel-heading"><div><p class="eyebrow">QUICK CAPTURE</p><h3>Sticky Notes</h3></div><button class="icon-button" id="add-note" aria-label="Add note">+</button></div>
+        <div class="panel-heading">
+          <div><p class="eyebrow">QUICK CAPTURE</p><h3>Sticky Notes</h3></div>
+          <button class="icon-button" id="add-note" aria-label="Add note">+</button>
+        </div>
         <div id="notes-list" class="notes-list"></div>
       </article>
     </section>
+
+    <footer class="desktop-footer">
+      <span>DESKTOP MODE</span>
+      <span>Ctrl + Shift + Q to exit</span>
+    </footer>
   </main>
   <script src="./settings.js"></script>
   <script src="./notes.js"></script>
