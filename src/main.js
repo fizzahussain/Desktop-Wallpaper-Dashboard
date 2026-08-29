@@ -2,6 +2,11 @@ const { app, BrowserWindow, screen, globalShortcut } = require('electron');
 const path = require('path');
 
 let windows = [];
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+
+if (!gotSingleInstanceLock) {
+  app.quit();
+}
 
 function createDesktopWindow(display) {
   const { x, y, width, height } = display.bounds;
@@ -45,22 +50,23 @@ function createWindows() {
   windows = screen.getAllDisplays().map(createDesktopWindow);
 }
 
-app.whenReady().then(() => {
-  if (process.platform === 'win32') {
-    app.setLoginItemSettings({
-      openAtLogin: true,
-      openAsHidden: false
-    });
-  }
+if (gotSingleInstanceLock) {
+  app.whenReady().then(() => {
+    if (process.platform === 'win32') {
+      app.setLoginItemSettings({ openAtLogin: true, openAsHidden: false });
+    }
 
-  createWindows();
+    createWindows();
+    screen.on('display-added', createWindows);
+    screen.on('display-removed', createWindows);
+    screen.on('display-metrics-changed', createWindows);
+    globalShortcut.register('CommandOrControl+Shift+Q', () => app.quit());
+  });
 
-  screen.on('display-added', createWindows);
-  screen.on('display-removed', createWindows);
-  screen.on('display-metrics-changed', createWindows);
-
-  globalShortcut.register('CommandOrControl+Shift+Q', () => app.quit());
-});
+  app.on('second-instance', () => {
+    // A second launch reuses the existing desktop instance.
+  });
+}
 
 app.on('will-quit', () => globalShortcut.unregisterAll());
 
